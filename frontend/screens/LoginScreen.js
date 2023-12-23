@@ -38,7 +38,7 @@ const LoginScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-        <Image source={require("../assets/logo.png")} style={styles.logo} />
+        <Image source={require("../assets/AppLogo.png")} style={styles.logo} />
         <Text style={styles.logoText}>MediGraph</Text>
       </View>
       <Text style={styles.loginText}>Login</Text>
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     paddingHorizontal: 16,
     fontSize: 16,
-    color: "#ffffff",
+    color: "black",
     marginVertical: 10,
     padding: 10,
   },

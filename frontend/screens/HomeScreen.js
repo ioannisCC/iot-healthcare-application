@@ -15,78 +15,108 @@ import {
   MaterialCommunityIcons,
 } from "@expo/vector-icons"; // Make sure to install expo vector icons package
 
-const HomeScreen = () => {
-  const handleBrainwavesGraphs = (category) => {
-    console.log(`Pressed ${category}`);
-    alert("Brainwaves Graphs pressed");
-    // You can add navigation logic here
-  };
-  const handlePulseGraphs = (category) => {
-    console.log(`Pressed ${category}`);
-    alert("Pulse Graphs pressed");
-    // You can add navigation logic here
-  };
-
+const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>MediGraph</Text>
         <TextInput style={styles.searchInput} placeholder="Search patients" />
       </View>
-      <ScrollView style={styles.contentContainer}>
-        <Text style={styles.categoryHeaderText}>Real Time Graphs</Text>
-        <TouchableOpacity
-          style={styles.categoryButton}
-          onPress={() => handleBrainwavesGraphs("Brainwaves Graphs")}
-        >
-          <Ionicons name="ios-pulse" size={24} color="white" />
-          <Text style={styles.categoryButtonText}>Brainwaves Graphs</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.categoryButton}
-          onPress={() => handlePulseGraphs("Brainwaves Graphs")}
-        >
-          <Ionicons name="ios-pulse" size={24} color="white" />
-          <Text style={styles.categoryButtonText}>Pulse Graphs</Text>
-        </TouchableOpacity>
+      <ScrollView>
+        <View>
+          <Text style={styles.categoryHeaderText}>Real Time Graphs</Text>
+          <TouchableOpacity
+            style={styles.categoryButton}
+            onPress={() => navigation.navigate("BrainwavesGraphs")}
+          >
+            <Ionicons name="ios-pulse" size={24} color="white" />
+            <Text style={styles.categoryButtonText}>Brainwaves Graphs</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.categoryButton}>
+            <Ionicons name="ios-pulse" size={24} color="white" />
+            <Text style={styles.categoryButtonText}>Pulse Graphs</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text style={styles.categoryHeaderText}>Schizophrenia</Text>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          <TouchableOpacity
+            style={styles.categoryButton2}
+            onPress={() => navigation.navigate("SchizophreniaMedication")}
+          >
+            <FontAwesome5 name="pills" size={24} color="white" />
+            <Text style={styles.categoryButtonText2}>Medication Proposal</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.categoryButton2}
+            onPress={() => navigation.navigate("SchizophreniaDetect")}
+          >
+            <MaterialCommunityIcons
+              name="stethoscope"
+              size={24}
+              color="white"
+            />
+            <Text style={styles.categoryButtonText2}>Detect</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.categoryButton2}
+            onPress={() => navigation.navigate("SchizophreniaPatientHistory")}
+          >
+            <FontAwesome name="history" size={24} color="white" />
+            <Text style={styles.categoryButtonText2}>Patient History</Text>
+          </TouchableOpacity>
+        </ScrollView>
+
+        <Text style={styles.categoryHeaderText}>Epilepsy</Text>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          <TouchableOpacity
+            style={styles.categoryButton2}
+            onPress={() => navigation.navigate("EpilepsyMedication")}
+          >
+            <FontAwesome5 name="pills" size={24} color="white" />
+            <Text style={styles.categoryButtonText2}>Medication Proposal</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.categoryButton2}
+            onPress={() => navigation.navigate("EpilepsyDetect")}
+          >
+            <MaterialCommunityIcons
+              name="stethoscope"
+              size={24}
+              color="white"
+            />
+            <Text style={styles.categoryButtonText2}>Detect</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.categoryButton2}
+            onPress={() => navigation.navigate("EpilepsyPatientHistory")}
+          >
+            <FontAwesome name="history" size={24} color="white" />
+            <Text style={styles.categoryButtonText2}>Patient History</Text>
+          </TouchableOpacity>
+        </ScrollView>
+
+        <Text style={styles.categoryHeaderText}>Pulse</Text>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          <TouchableOpacity
+            style={styles.categoryButton2}
+            onPress={() => navigation.navigate("PulsePatientHistory")}
+          >
+            <FontAwesome name="history" size={24} color="white" />
+            <Text style={styles.categoryButtonText2}>Patient History</Text>
+          </TouchableOpacity>
+        </ScrollView>
       </ScrollView>
 
-      <Text style={styles.categoryHeaderText}>Schizophrenia</Text>
-      <ScrollView
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollViewContainer}
-      >
-        <TouchableOpacity
-          style={styles.buttonStyle2}
-          onPress={() => handlePress("Medication Proposal")}
-        >
-          <FontAwesome5 name="pills" size={24} color="white" />
-          <Text style={styles.buttonText2}>Medication Proposal</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.buttonStyle2}
-          onPress={() => handlePress("Detect")}
-        >
-          <MaterialCommunityIcons name="stethoscope" size={24} color="white" />
-          <Text style={styles.buttonText2}>Detect</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.buttonStyle2}
-          onPress={() => handlePress("Patient History")}
-        >
-          <FontAwesome name="history" size={24} color="white" />
-          <Text style={styles.buttonText2}>Patient History</Text>
-        </TouchableOpacity>
-      </ScrollView>
-
-      <View style={styles.footer}>
+      {/* <View style={styles.footer}>
         <Ionicons name="ios-home" size={24} color="gray" />
         <FontAwesome5 name="save" size={20} color="gray" />
         <Ionicons name="ios-person" size={24} color="gray" />
-      </View>
+      </View> */}
     </View>
   );
 };
@@ -95,6 +125,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#262626",
+    padding: 10,
   },
   header: {
     paddingTop: 20,
@@ -114,30 +145,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 20,
   },
-  contentContainer: {
-    padding: 10,
-  },
   categoryHeaderText: {
     color: "white",
     fontSize: 20,
+    paddingTop: 30,
     paddingBottom: 10,
   },
-  category: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  categoryText: {
-    marginLeft: 10,
-    fontSize: 18,
-  },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderColor: "#ccc",
-  },
+  // footer: {
+  //   flexDirection: "row",
+  //   justifyContent: "space-around",
+  //   paddingVertical: 10,
+  //   borderTopWidth: 1,
+  //   borderColor: "#ccc",
+  // },
   categoryButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -152,30 +172,21 @@ const styles = StyleSheet.create({
     color: "white", // White color for the text
   },
 
-  categoryContainer2: {
-    // Container for the category and buttons
-    backgroundColor: "black",
-    paddingVertical: 10,
-    paddingLeft: 10,
-  },
-  scrollViewContainer2: {
-    // Styles for the ScrollView content
-    paddingRight: 10,
-  },
-  buttonStyle2: {
-    // Button styles
-    alignItems: "center",
-    justifyContent: "center",
-    width: 100, // Adjust the width as needed
-    height: 100, // Adjust the height as needed
-    backgroundColor: "#333", // A darker background for the button
+  categoryButton2: {
+    alignItems: "center", // Center content horizontally
+    justifyContent: "center", // Center content vertically
+    width: 110, // Adjust the width as needed
+    height: 90, // Adjust the height as needed
+    backgroundColor: "gray", // #333
     borderRadius: 10,
-    marginRight: 10, // Space between buttons
+    marginRight: 20, // Space between buttons
   },
-  buttonText2: {
-    // Text inside the button
+  categoryButtonText2: {
     color: "white",
     marginTop: 5,
+  },
+  betweenCategories: {
+    marginBottom: 150,
   },
 });
 

@@ -61,7 +61,7 @@ const RegisterScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-        <Image source={require("../assets/logo.png")} style={styles.logo} />
+        <Image source={require("../assets/AppLogo.png")} style={styles.logo} />
         <Text style={styles.logoText}>MediGraph</Text>
       </View>
       <Text style={styles.RegisterText}>Sign up</Text>
