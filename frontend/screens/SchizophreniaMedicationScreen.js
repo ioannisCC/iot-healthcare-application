@@ -20,21 +20,18 @@ const SchizophreniaMedicationScreen = () => {
     <View style={styles.container}>
       <ScrollView>
         <View>
-          <Text style={styles.categoryHeaderText}>Real Time Graphs</Text>
-          <TouchableOpacity
-            style={styles.categoryButton}
-            onPress={() => handleBrainwavesGraphs("Brainwaves Graphs")}
-          >
-            <Ionicons name="ios-pulse" size={24} color="white" />
-            <Text style={styles.categoryButtonText}>Brainwaves Graphs</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.categoryButton}
-            onPress={() => handlePulseGraphs("Brainwaves Graphs")}
-          >
-            <Ionicons name="ios-pulse" size={24} color="white" />
-            <Text style={styles.categoryButtonText}>Pulse Graphs</Text>
-          </TouchableOpacity>
+          <Text style={styles.categoryHeaderText}>
+            Schizophrenia Medication Suggestion
+          </Text>
+          <View style={styles.category}>
+            <Text style={styles.categoryText}>Prodromal Phase</Text>
+          </View>
+          <View style={styles.category}>
+            <Text style={styles.categoryText}>Active Phase</Text>
+          </View>
+          <View style={styles.category}>
+            <Text style={styles.categoryText}>Residual Phase</Text>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -78,7 +75,7 @@ const styles = StyleSheet.create({
   //   borderTopWidth: 1,
   //   borderColor: "#ccc",
   // },
-  categoryButton: {
+  category: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "gray",
@@ -86,7 +83,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
   },
-  categoryButtonText: {
+  categoryText: {
     marginLeft: 10,
     fontSize: 18,
     color: "white", // White color for the text

@@ -45,7 +45,9 @@ const HomeScreen = ({ navigation }) => {
             onPress={() => navigation.navigate("SchizophreniaMedication")}
           >
             <FontAwesome5 name="pills" size={24} color="white" />
-            <Text style={styles.categoryButtonText2}>Medication Proposal</Text>
+            <Text style={styles.categoryButtonText2}>
+              Medication Suggestion
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -76,7 +78,9 @@ const HomeScreen = ({ navigation }) => {
             onPress={() => navigation.navigate("EpilepsyMedication")}
           >
             <FontAwesome5 name="pills" size={24} color="white" />
-            <Text style={styles.categoryButtonText2}>Medication Proposal</Text>
+            <Text style={styles.categoryButtonText2}>
+              Medication Suggestion
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity

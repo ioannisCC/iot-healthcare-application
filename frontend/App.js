@@ -14,6 +14,7 @@ import EpilepsyDetectScreen from "./screens/EpilepsyDetectScreen";
 import EpilepsyMedicationScreen from "./screens/EpilepsyMedicationScreen";
 import EpilepsyPatientHistoryScreen from "./screens/EpilepsyPatientHistoryScreen";
 import PulsePatientHistoryScreen from "./screens/PulsePatientHistory";
+import ProfileScreen from "./screens/ProfileScreen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Stack = createStackNavigator();
@@ -25,7 +26,14 @@ function HomeTabs() {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
+          if (route.name === "Home") {
+            iconName = focused ? "ios-home" : "ios-home-outline";
+          } else if (route.name === "Profile") {
+            iconName = focused ? "ios-person" : "ios-person-outline";
+          }
+          // Add more else if blocks for other tabs if needed
 
+          // Now we return the icon component with the correct icon name
           return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}
@@ -38,8 +46,9 @@ function HomeTabs() {
         },
       }}
     >
-      <Tab.Screen name="HomeScreen" component={HomeScreen} />
-      {/* <Tab.Screen name="Profile" component={ProfileScreen} /> */}
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+      {/* Add other Tab.Screen components for other tabs if necessary */}
     </Tab.Navigator>
   );
 }
