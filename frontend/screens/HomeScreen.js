@@ -32,7 +32,10 @@ const HomeScreen = ({ navigation }) => {
             <Ionicons name="ios-pulse" size={24} color="white" />
             <Text style={styles.categoryButtonText}>Brainwaves Graphs</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryButton}>
+          <TouchableOpacity
+            style={styles.categoryButton}
+            onPress={() => navigation.navigate("PulseGraphs")}
+          >
             <Ionicons name="ios-pulse" size={24} color="white" />
             <Text style={styles.categoryButtonText}>Pulse Graphs</Text>
           </TouchableOpacity>

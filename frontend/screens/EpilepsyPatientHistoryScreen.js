@@ -7,36 +7,74 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  FlatList,
 } from "react-native";
-import {
-  Ionicons,
-  FontAwesome,
-  FontAwesome5,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons"; // Make sure to install expo vector icons package
+
+data = [
+  {
+    id: "1",
+    text: "Mary has been detected with Epilepsy.",
+    time: "22:13",
+    date: "18/03/2022",
+  },
+  {
+    id: "2",
+    text: "Mary has been detected with Epilepsy.",
+    time: "09:45",
+    date: "19/03/2022",
+  },
+];
+
+function ListItem({ text, time, date }) {
+  return (
+    <View
+      style={{
+        backgroundColor: "gray",
+        flex: 1,
+        padding: 15,
+        marginVertical: 10,
+        borderRadius: 5,
+        flexDirection: "row",
+        alignItems: "center",
+      }}
+    >
+      <Image
+        source={require("../assets/patientPicture.png")}
+        style={styles.profilePic}
+      />
+      <Text
+        style={{
+          color: "#dddddd",
+          fontSize: 18,
+          fontWeight: "bold",
+          width: 200,
+          margin: 10,
+        }}
+      >
+        {text}
+      </Text>
+
+      <View style={{ width: 100 }}>
+        <Text style={styles.timeText}>{time}</Text>
+        <Text style={styles.timeText}>{date}</Text>
+      </View>
+    </View>
+  );
+}
 
 const EpilepsyPatientHistoryScreen = () => {
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <View>
-          <Text style={styles.categoryHeaderText}>Real Time Graphs</Text>
-          <TouchableOpacity
-            style={styles.categoryButton}
-            onPress={() => handleBrainwavesGraphs("Brainwaves Graphs")}
-          >
-            <Ionicons name="ios-pulse" size={24} color="white" />
-            <Text style={styles.categoryButtonText}>Brainwaves Graphs</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.categoryButton}
-            onPress={() => handlePulseGraphs("Brainwaves Graphs")}
-          >
-            <Ionicons name="ios-pulse" size={24} color="white" />
-            <Text style={styles.categoryButtonText}>Pulse Graphs</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+      <View>
+        <Text style={styles.categoryHeaderText}>Epilepsy Patient History</Text>
+        <FlatList
+          data={data}
+          keyExtractor={(dataList) => dataList.id}
+          renderItem={({ item }) => (
+            <ListItem text={item.text} time={item.time} date={item.date} />
+          )}
+        />
+      </View>
     </View>
   );
 };
@@ -47,37 +85,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#262626",
     padding: 10,
   },
-  header: {
-    paddingTop: 20,
-    paddingBottom: 10,
-    backgroundColor: "#262626",
-  },
-  headerText: {
-    color: "green",
-    fontSize: 25,
-    textAlign: "center",
-    paddingBottom: 10,
-  },
-  searchInput: {
-    height: 40,
-    marginHorizontal: 10,
-    padding: 10,
-    backgroundColor: "#fff",
-    borderRadius: 20,
-  },
   categoryHeaderText: {
     color: "white",
     fontSize: 20,
     paddingTop: 30,
     paddingBottom: 10,
   },
-  // footer: {
-  //   flexDirection: "row",
-  //   justifyContent: "space-around",
-  //   paddingVertical: 10,
-  //   borderTopWidth: 1,
-  //   borderColor: "#ccc",
-  // },
   categoryButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -91,8 +104,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "white", // White color for the text
   },
-  betweenCategories: {
-    marginBottom: 150,
+  profilePic: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 10,
+  },
+  timeText: {
+    color: "#dddddd",
+    fontWeight: "700",
+    fontSize: 14,
   },
 });
 
