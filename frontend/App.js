@@ -31,20 +31,15 @@ function HomeTabs() {
           } else if (route.name === "Profile") {
             iconName = focused ? "ios-person" : "ios-person-outline";
           }
-          // Add more else if blocks for other tabs if needed
-
-          // Now we return the icon component with the correct icon name
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-      })}
-      tabBarOptions={{
-        activeTintColor: "green",
-        inactiveTintColor: "gray",
-        style: {
-          backgroundColor: "black", // Tab bar background color set to black
-          borderTopColor: "transparent", // Optional: remove the border on top of the tab bar
+        tabBarActiveTintColor: "green", // Moved from tabBarOptions
+        tabBarInactiveTintColor: "gray", // Moved from tabBarOptions
+        tabBarStyle: {
+          backgroundColor: "black", // Moved from tabBarOptions
+          borderTopColor: "transparent", // Moved from tabBarOptions
         },
-      }}
+      })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
@@ -92,7 +87,7 @@ const App = () => {
         />
 
         <Stack.Screen
-          name="Home"
+          name="Main" // Renamed from "Home" to "Main"
           component={HomeTabs}
           options={{ headerShown: false }}
         />

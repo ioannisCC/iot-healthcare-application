@@ -31,7 +31,7 @@ const LoginScreen = ({ route, navigation }) => {
   const handleLogin = () => {
     if (email === "admin" && password === "123456") {
       // Navigate to the Welcome screen if credentials are correct
-      navigation.navigate("Home");
+      navigation.navigate("Main");
     }
   };
 

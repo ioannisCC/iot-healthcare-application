@@ -116,7 +116,7 @@ function ProfileScreen(props) {
         <View style={styles.contactsContainer}>
           <ScrollView horizontal={true}>
             {data.map((e) => (
-              <EmergencyContact name={e.name} id={e.id} />
+              <EmergencyContact key={e.id.toString()} name={e.name} id={e.id} />
             ))}
           </ScrollView>
         </View>
