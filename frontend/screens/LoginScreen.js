@@ -30,7 +30,6 @@ const LoginScreen = ({ route, navigation }) => {
 
   const handleLogin = () => {
     if (email === "admin" && password === "123456") {
-      // Navigate to the Welcome screen if credentials are correct
       navigation.navigate("Main");
     }
   };
@@ -81,8 +80,8 @@ const styles = StyleSheet.create({
     marginBottom: 50,
   },
   logo: {
-    width: 100, // Adjust as needed
-    height: 100, // Adjust as needed
+    width: 100,
+    height: 100,
   },
   logoText: {
     color: "black",

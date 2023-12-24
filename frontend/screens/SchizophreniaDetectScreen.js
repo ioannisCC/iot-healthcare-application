@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,14 +8,28 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import {
-  Ionicons,
-  FontAwesome,
-  FontAwesome5,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons"; // Make sure to install expo vector icons package
 
 const SchizophreniaDetectScreen = () => {
+  const [data, setData] = useState([{}]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://192.168.56.1:3000/members");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setData(data);
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <View style={styles.container}>
       <ScrollView>

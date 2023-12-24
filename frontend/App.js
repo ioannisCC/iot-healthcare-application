@@ -87,11 +87,10 @@ const App = () => {
         />
 
         <Stack.Screen
-          name="Main" // Renamed from "Home" to "Main"
+          name="Main"
           component={HomeTabs}
           options={{ headerShown: false }}
         />
-        {/* HomeTabs is now a screen that contains the bottom tabs */}
       </Stack.Navigator>
     </NavigationContainer>
   );
