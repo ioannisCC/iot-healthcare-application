@@ -9,8 +9,9 @@ CORS(app)
 
 @app.route("/members")
 def members():
-    probabilityOfSchizophrenia = predict()
-    return {probabilityOfSchizophrenia}
+    return {"members": ["Member1", "Member2", "Member3"]}
+    # probabilityOfSchizophrenia = predict()
+    # return {probabilityOfSchizophrenia}
 
 
 def predict():
