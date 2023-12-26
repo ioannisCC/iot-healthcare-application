@@ -1,7 +1,7 @@
 import os
 import matplotlib.pyplot as plt
 
-directory_path = 'OneDrive/Desktop/ioannis/university/erasmus-2023-2024/university/internet-of-things-iot/project/test/pattern-analysis'
+directory_path = 'pattern-analysis'
 
 # Initialize lists to store extracted values from all files
 all_values = []
@@ -11,7 +11,7 @@ for filename in os.listdir(directory_path):
     if filename.endswith('.dat'):
         file_path = os.path.join(directory_path, filename)
         
-        # Open each file and read its contents
+        '''# Open each file and read its contents
         with open(file_path, 'r') as file:
             data = file.read()
         
@@ -23,7 +23,27 @@ for filename in os.listdir(directory_path):
         
         # Store extracted values in the list
         all_values.append(numeric_values)
+        '''
 
+        for encoding in ['utf-8', 'latin-1', 'utf-16']:
+            try:
+                with open(file_path, 'r', encoding=encoding) as file:
+                    data = file.read()
+                    values = data.split()  # Modify this based on how values are separated
+                    numeric_values = []
+                    
+                    for value in values:
+                        try:
+                            numeric_values.append(float(value))
+                        except ValueError:
+                            print(f"Issue converting value: {value} in file: {filename}")
+                            # Handle the issue here (e.g., skip this value)
+                    
+                    all_values.append(numeric_values)
+                break
+            except UnicodeDecodeError:
+                continue
+            
 # Create a plot using Matplotlib
 plt.figure(figsize=(8, 6))
 
