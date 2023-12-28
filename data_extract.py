@@ -1,5 +1,6 @@
 import mne
 import numpy as np
+import matplotlib as plt
 
 # Load the EEG data
 #raw = mne.io.read_raw_edf('OneDrive/Desktop/ioannis/university/erasmus-2023-2024/university/internet-of-things-iot/project/test/S001R01.edf', preload=True)
@@ -11,15 +12,15 @@ import numpy as np
 #psd, freqs = mne.time_frequency.psd_welch(raw)
 
 
-#EDF (European Data Format) is a simple and flexible format for exchange and storage of multichannel biological and physical signals
-#They contain raw electricak measuremnets captured from electrodes placed on a person's sclap.
-#they represent voltage fluctuations over time corresponding to neural activity in the brain.
-# Load the EEG data
-raw = mne.io.read_raw_edf('OneDrive/Desktop/ioannis/university/erasmus-2023-2024/university/internet-of-things-iot/project/test/S001R11.edf', preload=True)
+# EDF (European Data Format) is a simple and flexible format for exchange and storage of multichannel biological and physical signals
+# they contain raw electrical measuremnets captured from electrodes placed on a person's sclap.
+# they represent voltage fluctuations over time corresponding to neural activity in the brain.
+
+# load the EEG data
+raw = mne.io.read_raw_edf('S001R01.edf', preload=True)
 
 
-# Apply filtering if needed
-raw.filter(1, 40)  # Example: filtering data between 1 Hz and 40 Hz
+raw.filter(1, 40)  # filtering data between 1 Hz and 40 Hz
 
 # Extract data as numpy array and compute PSD using Welch's method
 data = raw.get_data()
@@ -31,7 +32,7 @@ delta_band = [0.5, 4]   # Delta band (0.5 - 4 Hz)
 theta_band = [4, 8]     # Theta band (4 - 8 Hz)
 alpha_band = [8, 13]    # Alpha band (8 - 13 Hz)
 beta_band = [13, 30]    # Beta band (13 - 30 Hz)
-gamma_band = [30, 40]   # Gamma band (30 - 40 Hz)
+gamma_band = [30, 100]   # Gamma band (30 - 40 Hz)
 
 # Calculate indices corresponding to the frequency bands
 freq_indices = np.where((freqs >= delta_band[0]) & (freqs <= delta_band[1]))[0]
@@ -69,3 +70,14 @@ bands_power = {
 dominant_band = max(bands_power, key=bands_power.get)
 print("")
 print(f"The signal predominantly belongs to the {dominant_band} band.")
+
+import matplotlib.pyplot as plt
+
+# Plot the EEG data
+plt.figure(figsize=(10, 6))
+plt.plot(raw.times, data.T)  # Plotting the EEG signals
+plt.xlabel('Time (s)')
+plt.ylabel('Amplitude')
+plt.title('EEG Signals')
+plt.legend(raw.ch_names)  # Add legend for channel names if available
+plt.show()
