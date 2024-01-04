@@ -9,9 +9,10 @@ CORS(app)
 
 @app.route("/members")
 def members():
-    return {"members": ["Member1", "Member2", "Member3"]}
-    # probabilityOfSchizophrenia = predict()
-    # return {probabilityOfSchizophrenia}
+    # return {"members": ["Member1", "Member2", "Member3"]}
+    probabilityOfSchizophrenia = predict()
+    print(type(probabilityOfSchizophrenia))
+    return probabilityOfSchizophrenia
 
 
 def predict():
@@ -22,18 +23,12 @@ def predict():
     import sys
     from scipy import stats
 
-    saved_model_path = 'model.joblib'
+    saved_model_path = '../model.joblib'
 
     # load the trained model
     trained_model = load(saved_model_path)
 
-    # take the new .edf file as an argument on the command line
-    if __name__ == "__main__":
-        if len(sys.argv) != 2:
-            print("Usage: python predict_schizophrenia.py <filename.edf>")
-            sys.exit(1)
-
-        new_file_path = sys.argv[1]
+    new_file_path = '../s14.edf'
 
     def read_new_data(file_path):
         data = mne.io.read_raw_edf(file_path, preload=True)  # read the data
@@ -114,7 +109,13 @@ def predict():
     print("Probability of being healthy:", probability_scores[0][0])
     print("Probability of having schizophrenia:", probability_scores[0][1])
 
-    return probability_scores[0][1]
+    probability_scores_int = probability_scores[0][1] * 100
+
+    probability_scores_int = round(probability_scores_int, 3)
+
+    probability_scores_str = str(probability_scores_int)
+
+    return probability_scores_str
 
 
 if __name__ == "__main__":

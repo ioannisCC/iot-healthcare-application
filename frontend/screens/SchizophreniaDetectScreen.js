@@ -19,9 +19,9 @@ const SchizophreniaDetectScreen = () => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
-        setData(data);
-        console.log(data);
+        const text = await response.text(); // Use .text() instead of .json()
+        setData(text);
+        console.log(text);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -42,12 +42,12 @@ const SchizophreniaDetectScreen = () => {
           </View>
           <View style={styles.category}>
             <Text style={styles.categoryText}>
-              Propability of being healthy: 18%
+              Propability of being healthy: {100 - data}%
             </Text>
           </View>
           <View style={styles.category}>
             <Text style={styles.categoryText}>
-              Propability of having Schizophrenia: 82%
+              Propability of having Schizophrenia: {data}%
             </Text>
           </View>
         </View>
