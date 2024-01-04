@@ -33,6 +33,7 @@ def read_new_data(file_path):
 
 # read the new .edf file
 new_data = read_new_data(new_file_path)
+on = 1
 
 
 def mean(data):
