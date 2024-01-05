@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 const SchizophreniaDetectScreen = () => {
-  const [data, setData] = useState([{}]);
+  const [data, setData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,7 +19,7 @@ const SchizophreniaDetectScreen = () => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const text = await response.text(); // Use .text() instead of .json()
+        const text = await response.text();
         setData(text);
         console.log(text);
       } catch (error) {
@@ -42,12 +42,14 @@ const SchizophreniaDetectScreen = () => {
           </View>
           <View style={styles.category}>
             <Text style={styles.categoryText}>
-              Propability of being healthy: {100 - data}%
+              Propability of being healthy:{" "}
+              {data !== null ? `${100 - data}%` : "Loading..."}
             </Text>
           </View>
           <View style={styles.category}>
             <Text style={styles.categoryText}>
-              Propability of having Schizophrenia: {data}%
+              Propability of having Schizophrenia:{" "}
+              {data !== null ? `${data}%` : "Loading..."}
             </Text>
           </View>
         </View>
@@ -72,13 +74,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
     textAlign: "center",
     paddingBottom: 10,
-  },
-  searchInput: {
-    height: 40,
-    marginHorizontal: 10,
-    padding: 10,
-    backgroundColor: "#fff",
-    borderRadius: 20,
   },
   categoryHeaderText: {
     color: "white",

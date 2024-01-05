@@ -68,7 +68,7 @@ function ProfileScreen(props) {
 
         <View style={styles.profilePic}></View>
 
-        <Text style={styles.title}>Patient Profile</Text>
+        <Text style={styles.title}>Doctor Profile</Text>
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button}>

@@ -9,7 +9,7 @@ saved_model_path = 'model.joblib'
 
 # load the trained model
 trained_model = load(saved_model_path)
-
+'''
 # take the new .edf file as an argument on the command line
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -17,7 +17,8 @@ if __name__ == "__main__":
         sys.exit(1)
 
     new_file_path = sys.argv[1]
-
+'''
+new_file_path = 's14.edf'
 
 def read_new_data(file_path):
     data = mne.io.read_raw_edf(file_path, preload=True)  # read the data
@@ -32,6 +33,7 @@ def read_new_data(file_path):
 
 # read the new .edf file
 new_data = read_new_data(new_file_path)
+on = 1
 
 
 def mean(data):

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -16,16 +16,74 @@ import {
 } from "@expo/vector-icons"; // Make sure to install expo vector icons package
 
 const HomeScreen = ({ navigation }) => {
+  const patients = [
+    { name: "Leanne Graham", id: "1" },
+    { name: "Ervin Howell", id: "2" },
+    { name: "Clementine Bauch", id: "3" },
+  ];
+
+  // State for search input and filtered patients
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredPatients, setFilteredPatients] = useState([]);
+  const [activePatient, setActivePatient] = useState(null);
+
+  // Handle search input change
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+    if (!text) {
+      setFilteredPatients([]);
+    } else {
+      setFilteredPatients(
+        patients.filter((patient) =>
+          patient.name.toLowerCase().includes(text.toLowerCase())
+        )
+      );
+    }
+  };
+
+  const selectPatient = (patient) => {
+    setSearchQuery(patient.name);
+    setActivePatient(patient);
+    setFilteredPatients([]);
+  };
+
+  const renderPatientList = () => {
+    return filteredPatients.map((patient) => (
+      <TouchableOpacity
+        key={patient.id}
+        style={styles.patientItem}
+        // Handle patient selection
+        // For example, navigate to patient's details
+        onPress={() => selectPatient(patient)}
+      >
+        <Text style={styles.patientName}>{patient.name}</Text>
+      </TouchableOpacity>
+    ));
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>MediGraph</Text>
-        <TextInput style={styles.searchInput} placeholder="Search patients" />
+        {/* <TextInput style={styles.searchInput} placeholder="Search patients" /> */}
+        <View style={styles.searchSection}>
+          <Ionicons name="ios-search" size={20} color="#000" />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search patients"
+            value={searchQuery}
+            onChangeText={handleSearch}
+            underlineColorAndroid="transparent"
+          />
+        </View>
+        <View style={styles.patientListContainer}>{renderPatientList()}</View>
       </View>
       <ScrollView>
         <View>
-          <Text style={styles.categoryHeaderText}>Real Time Graphs</Text>
-          <TouchableOpacity
+          {activePatient && (
+            <Text style={styles.categoryHeaderText}>Real Time Graphs</Text>
+          )}
+          {/* <TouchableOpacity
             style={styles.categoryButton}
             onPress={() => navigation.navigate("BrainwavesGraphs")}
           >
@@ -38,76 +96,157 @@ const HomeScreen = ({ navigation }) => {
           >
             <Ionicons name="ios-pulse" size={24} color="white" />
             <Text style={styles.categoryButtonText}>Pulse Graphs</Text>
+          </TouchableOpacity> */}
+          {/* <TouchableOpacity
+            style={[
+              styles.categoryButton,
+              activePatient ? {} : styles.disabledButton,
+            ]}
+            onPress={() => {
+              if (activePatient) {
+                navigation.navigate("BrainwavesGraphs", {
+                  patientId: activePatient.id,
+                });
+              }
+            }}
+            disabled={!activePatient}
+          >
+            <Ionicons
+              name="ios-pulse"
+              size={24}
+              color={activePatient ? "white" : "grey"}
+            />
+            <Text style={styles.categoryButtonText}>Brainwaves Graphs</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.categoryButton,
+              activePatient ? {} : styles.disabledButton,
+            ]}
+            onPress={() => {
+              if (activePatient) {
+                navigation.navigate("PulseGraphs", {
+                  patientId: activePatient.id,
+                });
+              }
+            }}
+            disabled={!activePatient}
+          >
+            <Ionicons
+              name="ios-pulse"
+              size={24}
+              color={activePatient ? "white" : "grey"}
+            />
+            <Text style={styles.categoryButtonText}>Pulse Graphs</Text>
+          </TouchableOpacity> */}
+
+          {activePatient && (
+            <TouchableOpacity
+              style={styles.categoryButton}
+              onPress={() =>
+                navigation.navigate("BrainwavesGraphs", {
+                  patientId: activePatient.id,
+                })
+              }
+            >
+              <Ionicons name="ios-pulse" size={24} color="white" />
+              <Text style={styles.categoryButtonText}>Brainwaves Graphs</Text>
+            </TouchableOpacity>
+          )}
+
+          {activePatient && (
+            <TouchableOpacity
+              style={styles.categoryButton}
+              onPress={() =>
+                navigation.navigate("PulseGraphs", {
+                  patientId: activePatient.id,
+                })
+              }
+            >
+              <Ionicons name="ios-pulse" size={24} color="white" />
+              <Text style={styles.categoryButtonText}>Pulse Graphs</Text>
+            </TouchableOpacity>
+          )}
         </View>
-
-        <Text style={styles.categoryHeaderText}>Schizophrenia</Text>
+        {activePatient && (
+          <Text style={styles.categoryHeaderText}>Schizophrenia</Text>
+        )}
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <TouchableOpacity
-            style={styles.categoryButton2}
-            onPress={() => navigation.navigate("SchizophreniaMedication")}
-          >
-            <FontAwesome5 name="pills" size={24} color="white" />
-            <Text style={styles.categoryButtonText2}>
-              Medication Suggestion
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.categoryButton2}
-            onPress={() => navigation.navigate("SchizophreniaDetect")}
-          >
-            <MaterialCommunityIcons
-              name="stethoscope"
-              size={24}
-              color="white"
-            />
-            <Text style={styles.categoryButtonText2}>Detect</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.categoryButton2}
-            onPress={() => navigation.navigate("SchizophreniaPatientHistory")}
-          >
-            <FontAwesome name="history" size={24} color="white" />
-            <Text style={styles.categoryButtonText2}>Patient History</Text>
-          </TouchableOpacity>
+          {activePatient && (
+            <TouchableOpacity
+              style={styles.categoryButton2}
+              onPress={() => navigation.navigate("SchizophreniaMedication")}
+            >
+              <FontAwesome5 name="pills" size={24} color="white" />
+              <Text style={styles.categoryButtonText2}>
+                Medication Suggestion
+              </Text>
+            </TouchableOpacity>
+          )}
+          {activePatient && (
+            <TouchableOpacity
+              style={styles.categoryButton2}
+              onPress={() => navigation.navigate("SchizophreniaDetect")}
+            >
+              <MaterialCommunityIcons
+                name="stethoscope"
+                size={24}
+                color="white"
+              />
+              <Text style={styles.categoryButtonText2}>Detect</Text>
+            </TouchableOpacity>
+          )}
+          {activePatient && (
+            <TouchableOpacity
+              style={styles.categoryButton2}
+              onPress={() => navigation.navigate("SchizophreniaPatientHistory")}
+            >
+              <FontAwesome name="history" size={24} color="white" />
+              <Text style={styles.categoryButtonText2}>Patient History</Text>
+            </TouchableOpacity>
+          )}
+        </ScrollView>
+        {activePatient && (
+          <Text style={styles.categoryHeaderText}>Epilepsy</Text>
+        )}
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          {activePatient && (
+            <TouchableOpacity
+              style={styles.categoryButton2}
+              onPress={() => navigation.navigate("EpilepsyMedication")}
+            >
+              <FontAwesome5 name="pills" size={24} color="white" />
+              <Text style={styles.categoryButtonText2}>
+                Medication Suggestion
+              </Text>
+            </TouchableOpacity>
+          )}
+          {activePatient && (
+            <TouchableOpacity
+              style={styles.categoryButton2}
+              onPress={() => navigation.navigate("EpilepsyDetect")}
+            >
+              <MaterialCommunityIcons
+                name="stethoscope"
+                size={24}
+                color="white"
+              />
+              <Text style={styles.categoryButtonText2}>Detect</Text>
+            </TouchableOpacity>
+          )}
+          {activePatient && (
+            <TouchableOpacity
+              style={styles.categoryButton2}
+              onPress={() => navigation.navigate("EpilepsyPatientHistory")}
+            >
+              <FontAwesome name="history" size={24} color="white" />
+              <Text style={styles.categoryButtonText2}>Patient History</Text>
+            </TouchableOpacity>
+          )}
         </ScrollView>
 
-        <Text style={styles.categoryHeaderText}>Epilepsy</Text>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <TouchableOpacity
-            style={styles.categoryButton2}
-            onPress={() => navigation.navigate("EpilepsyMedication")}
-          >
-            <FontAwesome5 name="pills" size={24} color="white" />
-            <Text style={styles.categoryButtonText2}>
-              Medication Suggestion
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.categoryButton2}
-            onPress={() => navigation.navigate("EpilepsyDetect")}
-          >
-            <MaterialCommunityIcons
-              name="stethoscope"
-              size={24}
-              color="white"
-            />
-            <Text style={styles.categoryButtonText2}>Detect</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.categoryButton2}
-            onPress={() => navigation.navigate("EpilepsyPatientHistory")}
-          >
-            <FontAwesome name="history" size={24} color="white" />
-            <Text style={styles.categoryButtonText2}>Patient History</Text>
-          </TouchableOpacity>
-        </ScrollView>
-
-        <Text style={styles.categoryHeaderText}>Pulse</Text>
+        {/* <Text style={styles.categoryHeaderText}>Pulse</Text>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           <TouchableOpacity
             style={styles.categoryButton2}
@@ -116,7 +255,7 @@ const HomeScreen = ({ navigation }) => {
             <FontAwesome name="history" size={24} color="white" />
             <Text style={styles.categoryButtonText2}>Patient History</Text>
           </TouchableOpacity>
-        </ScrollView>
+        </ScrollView> */}
       </ScrollView>
 
       {/* <View style={styles.footer}>
@@ -140,17 +279,53 @@ const styles = StyleSheet.create({
     backgroundColor: "#262626",
   },
   headerText: {
-    color: "green",
+    color: "white",
     fontSize: 25,
     textAlign: "center",
     paddingBottom: 10,
   },
-  searchInput: {
-    height: 40,
-    marginHorizontal: 10,
+  patientName: {
+    color: "white",
     padding: 10,
+  },
+  // searchInput: {
+  //   height: 40,
+  //   marginHorizontal: 10,
+  //   padding: 10,
+  //   backgroundColor: "#fff",
+  //   borderRadius: 20,
+  // },
+  searchSection: {
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "#fff",
-    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#000",
+    borderRadius: 5,
+    padding: 10,
+    margin: 10,
+  },
+  searchInput: {
+    flex: 1,
+    paddingLeft: 10,
+    fontSize: 16,
+    color: "#424242",
+  },
+  patientListContainer: {
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderTopWidth: 0,
+    maxHeight: 200, // Adjust the max height as needed
+  },
+  patientItem: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  patientName: {
+    fontSize: 16,
+    color: "#000",
   },
   categoryHeaderText: {
     color: "white",
