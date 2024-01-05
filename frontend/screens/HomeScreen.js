@@ -14,12 +14,15 @@ import {
   FontAwesome5,
   MaterialCommunityIcons,
 } from "@expo/vector-icons"; // Make sure to install expo vector icons package
+import storage from "@react-native-firebase/storage";
+import firebase from "firebase/app";
+import "firebase/storage";
 
 const HomeScreen = ({ navigation }) => {
   const patients = [
     { name: "Leanne Graham", id: "1" },
     { name: "Ervin Howell", id: "2" },
-    { name: "Clementine Bauch", id: "3" },
+    { name: "George Smith", id: "3" },
   ];
 
   // State for search input and filtered patients
@@ -41,11 +44,11 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-  const selectPatient = (patient) => {
-    setSearchQuery(patient.name);
-    setActivePatient(patient);
-    setFilteredPatients([]);
-  };
+  // const selectPatient = (patient) => {
+  //   setSearchQuery(patient.name);
+  //   setActivePatient(patient);
+  //   setFilteredPatients([]);
+  // };
 
   const renderPatientList = () => {
     return filteredPatients.map((patient) => (
@@ -59,6 +62,32 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.patientName}>{patient.name}</Text>
       </TouchableOpacity>
     ));
+  };
+
+  const selectPatient = async (patient) => {
+    setSearchQuery(patient.name);
+    setActivePatient(patient);
+    setFilteredPatients([]);
+
+    // Reference to the user's folder in Firebase Storage
+    const userFolderRef = storage().ref(`/${patient.name}`);
+
+    try {
+      // List all items in the user's folder
+      const listResult = await userFolderRef.listAll();
+
+      // Assuming there's only one file per user and it's the first item
+      const fileRef = listResult.items[0];
+
+      // Get the download URL
+      const url = await fileRef.getDownloadURL();
+      console.log("File URL:", url);
+
+      // Navigate to a screen and pass the file URL if needed
+      // navigation.navigate('SomeScreen', { fileUrl: url });
+    } catch (error) {
+      console.error("Error fetching file:", error);
+    }
   };
 
   return (
