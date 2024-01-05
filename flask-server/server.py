@@ -15,7 +15,6 @@ def members():
     return probabilityOfSchizophrenia
 
 
-@app.route('/predict', methods=['POST'])
 def predict():
     import mne
     import numpy as np
@@ -29,15 +28,15 @@ def predict():
     # load the trained model
     trained_model = load(saved_model_path)
 
-    # Retrieve file name from POST data
-    data = request.json
-    file_name = data['fileName']
-    # Path to the folder where the EDF files are stored
-    edf_folder_path = '../'  # Update this path to the folder where your EDF files are stored
-    # Full path to the EDF file
-    new_file_path = os.path.join(edf_folder_path, file_name)
+    # # Retrieve file name from POST data
+    # data = request.json
+    # file_name = data['fileName']
+    # # Path to the folder where the EDF files are stored
+    # edf_folder_path = '../'  # Update this path to the folder where your EDF files are stored
+    # # Full path to the EDF file
+    # new_file_path = os.path.join(edf_folder_path, file_name)
 
-    # new_file_path = '../s14.edf'
+    new_file_path = '../s14.edf'
 
     def read_new_data(file_path):
         data = mne.io.read_raw_edf(file_path, preload=True)  # read the data
