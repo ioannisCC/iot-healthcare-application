@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -16,27 +16,43 @@ import {
 } from "@expo/vector-icons"; // Make sure to install expo vector icons package
 
 const BrainwavesGraphsScreen = () => {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://192.168.56.1:3000/brainwavegraph");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const blob = await response.blob();
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64data = reader.result;
+          setData(base64data);
+        };
+        reader.readAsDataURL(blob);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <View>
-          <Text style={styles.categoryHeaderText}>Real Time Graphs</Text>
-          <TouchableOpacity
-            style={styles.categoryButton}
-            onPress={() => handleBrainwavesGraphs("Brainwaves Graphs")}
-          >
-            <Ionicons name="ios-pulse" size={24} color="white" />
-            <Text style={styles.categoryButtonText}>Brainwaves Graphs</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.categoryButton}
-            onPress={() => handlePulseGraphs("Brainwaves Graphs")}
-          >
-            <Ionicons name="ios-pulse" size={24} color="white" />
-            <Text style={styles.categoryButtonText}>Pulse Graphs</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+      {/* Other components */}
+      {data && (
+        <Image
+          source={{ uri: data }}
+          style={{
+            width: "100%",
+            height: "100%",
+            transform: [{ rotate: "90deg" }, { scale: 2 }], // Flip horizontally
+          }}
+          resizeMode="contain" // Or 'cover', depending on your needs
+        />
+      )}
     </View>
   );
 };

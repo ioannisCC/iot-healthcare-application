@@ -43,7 +43,7 @@ const SchizophreniaDetectScreen = () => {
           <View style={styles.category}>
             <Text style={styles.categoryText}>
               Propability of being healthy:{" "}
-              {data !== null ? `${100 - data}%` : "Loading..."}
+              {data !== null ? `${(100 - data).toFixed(3)}%` : "Loading..."}
             </Text>
           </View>
           <View style={styles.category}>

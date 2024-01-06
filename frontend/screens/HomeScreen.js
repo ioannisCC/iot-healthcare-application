@@ -13,19 +13,13 @@ import {
   FontAwesome,
   FontAwesome5,
   MaterialCommunityIcons,
-} from "@expo/vector-icons"; // Make sure to install expo vector icons package
-// import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-// import { getStorage } from "firebase/storage";
-// import firebase from "firebase/app";
-// import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { utils } from "@react-native-firebase/app";
-import storage from "@react-native-firebase/storage";
+} from "@expo/vector-icons";
 
 const HomeScreen = ({ navigation }) => {
   const patients = [
-    { name: "Leanne Graham", id: "1" },
-    { name: "Ervin Howell", id: "2" },
-    { name: "George Smith", id: "3" },
+    { name: "Leanne Graham", id: "LeanneGraham" },
+    { name: "Ervin Howell", id: "ErvinHowell" },
+    { name: "George Smith", id: "GeorgeSmith" },
   ];
 
   // State for search input and filtered patients
@@ -51,6 +45,7 @@ const HomeScreen = ({ navigation }) => {
     setSearchQuery(patient.name);
     setActivePatient(patient);
     setFilteredPatients([]);
+    sendPatientNameToServer(patient.id);
   };
 
   const renderPatientList = () => {
@@ -67,91 +62,22 @@ const HomeScreen = ({ navigation }) => {
     ));
   };
 
-  const reference = storage().ref("/George Smith/black.txt");
+  const sendPatientNameToServer = async (patientName) => {
+    try {
+      const response = await fetch("http://192.168.56.1:3000/patient", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ patientName }),
+      });
 
-  // const storage = getStorage();
-  // getDownloadURL(ref(storage, "George Smith/h05.edf"))
-  //   .then((url) => {
-  //     // `url` is the download URL for 'images/stars.jpg'
-
-  //     // This can be downloaded directly:
-  //     const xhr = new XMLHttpRequest();
-  //     xhr.responseType = "blob";
-  //     xhr.onload = (event) => {
-  //       const blob = xhr.response;
-  //     };
-  //     xhr.open("GET", url);
-  //     xhr.send();
-
-  //     // Or inserted into an <img> element
-  //     // const img = document.getElementById("myimg");
-  //     // img.setAttribute("src", url);
-  //   })
-  //   .catch((error) => {
-  //     // Handle any errors
-  //   });
-
-  // const storage = getStorage(); // Initialize this with your Firebase app if not already done
-
-  // const onFileDownload = async (userEmail, fileName) => {
-  //   try {
-  //     const fileRef = ref(storage, `${userEmail}/${fileName}`);
-  //     const url = await getDownloadURL(fileRef);
-
-  //     console.log("File download URL:", url); // You can use this URL to download the file
-
-  //     // Define the path to save the file using Expo's FileSystem.downloadAsync
-  //     const localUri = FileSystem.documentDirectory + fileName;
-
-  //     // Use Expo's FileSystem to download the file
-  //     const { uri } = await FileSystem.downloadAsync(url, localUri);
-  //     console.log("File downloaded to:", uri); // Local URI to access the file on the device
-
-  //     alert("File downloaded successfully!");
-  //   } catch (error) {
-  //     console.error("Error downloading file:", error);
-  //     alert("Error downloading file."); // Alert for an error during download
-  //   }
-  // };
-
-  // Call this function with the user's email and the file name you want to download
-  // Example usage: onFileDownload('user@example.com', 'example-file.pdf');
-
-  useEffect(async () => {
-    // Replace 'user@example.com' with the email of the user you want to download the file for
-    // Replace 'example-file.pdf' with the actual file name you want to download
-    const pathToFile = "../../s14.edf";
-    // uploads file
-    await reference.putFile(pathToFile);
-    // getDownloadURL();
-    // onFileDownload("George Smith", "h05.edf");
-  }, []); // The empty array as the second argument ensures this effect only runs once, after initial mount
-
-  // const selectPatient = async (patient) => {
-  //   setSearchQuery(patient.name);
-  //   setActivePatient(patient);
-  //   setFilteredPatients([]);
-
-  //   // Reference to the user's folder in Firebase Storage
-  //   const userFolderRef = storage().ref(`/${patient.name}`);
-
-  //   try {
-  //     // List all items in the user's folder
-  //     const listResult = await userFolderRef.listAll();
-
-  //     // Assuming there's only one file per user and it's the first item
-  //     const fileRef = listResult.items[0];
-
-  //     // Get the download URL
-  //     const url = await fileRef.getDownloadURL();
-  //     console.log("File URL:", url);
-
-  //     // Navigate to a screen and pass the file URL if needed
-  //     // navigation.navigate('SomeScreen', { fileUrl: url });
-  //   } catch (error) {
-  //     console.error("Error fetching file:", error);
-  //   }
-  // };
+      const responseData = await response.text();
+      console.log(responseData);
+    } catch (error) {
+      console.error("Error sending patient name:", error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -175,63 +101,6 @@ const HomeScreen = ({ navigation }) => {
           {activePatient && (
             <Text style={styles.categoryHeaderText}>Real Time Graphs</Text>
           )}
-          {/* <TouchableOpacity
-            style={styles.categoryButton}
-            onPress={() => navigation.navigate("BrainwavesGraphs")}
-          >
-            <Ionicons name="ios-pulse" size={24} color="white" />
-            <Text style={styles.categoryButtonText}>Brainwaves Graphs</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.categoryButton}
-            onPress={() => navigation.navigate("PulseGraphs")}
-          >
-            <Ionicons name="ios-pulse" size={24} color="white" />
-            <Text style={styles.categoryButtonText}>Pulse Graphs</Text>
-          </TouchableOpacity> */}
-          {/* <TouchableOpacity
-            style={[
-              styles.categoryButton,
-              activePatient ? {} : styles.disabledButton,
-            ]}
-            onPress={() => {
-              if (activePatient) {
-                navigation.navigate("BrainwavesGraphs", {
-                  patientId: activePatient.id,
-                });
-              }
-            }}
-            disabled={!activePatient}
-          >
-            <Ionicons
-              name="ios-pulse"
-              size={24}
-              color={activePatient ? "white" : "grey"}
-            />
-            <Text style={styles.categoryButtonText}>Brainwaves Graphs</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.categoryButton,
-              activePatient ? {} : styles.disabledButton,
-            ]}
-            onPress={() => {
-              if (activePatient) {
-                navigation.navigate("PulseGraphs", {
-                  patientId: activePatient.id,
-                });
-              }
-            }}
-            disabled={!activePatient}
-          >
-            <Ionicons
-              name="ios-pulse"
-              size={24}
-              color={activePatient ? "white" : "grey"}
-            />
-            <Text style={styles.categoryButtonText}>Pulse Graphs</Text>
-          </TouchableOpacity> */}
 
           {activePatient && (
             <TouchableOpacity
