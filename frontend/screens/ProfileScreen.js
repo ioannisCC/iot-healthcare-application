@@ -6,121 +6,101 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  FlatList,
   StatusBar,
   ScrollView,
+  Image,
 } from "react-native";
+import { SelectList } from "react-native-dropdown-select-list";
 
-data = [
-  {
-    id: 1,
-    name: "Mom",
-  },
-  {
-    id: 2,
-    name: "Friend",
-  },
-  {
-    id: 3,
-    name: "Friend2",
-  },
+const specializations = [
+  { key: "neurologist", value: "Neurologist" },
+  { key: "neurosurgeon", value: "Neurosurgeon" },
+  { key: "psychiatrist", value: "Psychiatrist" },
+  { key: "neuropsychologist", value: "Neuropsychologist" },
+  { key: "epileptologist", value: "Epileptologist" },
+  { key: "sleep_specialist", value: "Sleep Specialist" },
+  { key: "clinical_neurophysiologist", value: "Clinical Neurophysiologist" },
+  { key: "nurse", value: "Nurse" },
 ];
 
-function EmergencyContact({ name, id }) {
-  return (
-    <View
-      style={{
-        padding: 10,
-        flexDirection: "row",
-        margin: 10,
-        backgroundColor: "#555555",
-        alignItems: "center",
-        borderRadius: 5,
-      }}
-    >
-      <View
-        style={{
-          paddingHorizontal: 15,
-          paddingVertical: 10,
-          backgroundColor: "#000000",
-          borderRadius: 5,
-        }}
-      >
-        <Text style={{ color: "#dddddd", fontSize: 22 }}>{id}</Text>
-      </View>
-      <Text style={{ paddingHorizontal: 15, fontSize: 18, color: "#dddddd" }}>
-        {name}
-      </Text>
-    </View>
-  );
-}
-
-function ProfileScreen(props) {
-  const [bloodType, setBloodType] = useState("O");
-  const [weight, setWeight] = useState("78");
-  const [height, setHeight] = useState("182");
-  const [allergies, setAllergies] = useState("Shellfish,");
+function ProfileScreen({ navigation }) {
+  const [firstname, setFirstname] = useState("John");
+  const [lastname, setLastname] = useState("Doe");
+  const [email, setEmail] = useState("doctorDoe@hospital.com");
+  const [specialization, setSpecialization] = useState("Neurologist");
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
-        <StatusBar style="light" />
+      <ScrollView>
+        <View style={styles.container}>
+          <StatusBar style="light" />
 
-        <View style={styles.profilePic}></View>
+          <View style={styles.profilePic}>
+            <Image
+              source={require("../assets/doctorProfilePic.png")}
+              style={styles.profilePic}
+            />
+          </View>
 
-        <Text style={styles.title}>Doctor Profile</Text>
+          <Text style={styles.title}>Doctor's Profile</Text>
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Age</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Gender</Text>
-          </TouchableOpacity>
+          <View style={styles.inputContainer}>
+            <Text style={styles.buttonText}>First Name</Text>
+            <TextInput
+              style={styles.input}
+              value={firstname}
+              onChangeText={setFirstname}
+              keyboardType="default"
+            />
+            <Text style={styles.buttonText}>Last Name</Text>
+            <TextInput
+              style={styles.input}
+              value={lastname}
+              onChangeText={setLastname}
+              keyboardType="default"
+            />
+            <Text style={styles.buttonText}>Email</Text>
+            <TextInput
+              style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+            />
+            <Text style={styles.buttonText}>Specialization</Text>
+            <SelectList
+              setSelected={setSpecialization}
+              data={specializations}
+              boxStyles={styles.input}
+              value={specialization}
+              onChangeText={setSpecialization}
+              placeholder="Neurologist"
+              placeholderTextColor="#FFFFFF"
+              dropdownStyles={{
+                backgroundColor: "#ffffff",
+                minHeight: 300, // Set a maximum height for the dropdown
+                width: 350,
+                padding: 10,
+                color: "#ffffff",
+              }}
+              inputStyles={{
+                color: "#ffffff", // Setting text color of selected item to white
+                height: 100,
+              }}
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Save Changes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("Login", {})}
+            >
+              <Text style={styles.buttonText}>Logout</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.buttonText}>Blood Type</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Blood type"
-            value={bloodType}
-            onChangeText={setBloodType}
-            keyboardType="default"
-          />
-          <Text style={styles.buttonText}>Weight</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Weight"
-            value={weight}
-            onChangeText={setWeight}
-            keyboardType="number-pad"
-          />
-          <Text style={styles.buttonText}>Height</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Height"
-            value={height}
-            onChangeText={setHeight}
-            keyboardType="number-pad"
-          />
-          <Text style={styles.buttonText}>Allergies</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Allergies"
-            value={allergies}
-            onChangeText={setAllergies}
-            keyboardType="default"
-          />
-        </View>
-
-        <View style={styles.contactsContainer}>
-          <ScrollView horizontal={true}>
-            {data.map((e) => (
-              <EmergencyContact key={e.id.toString()} name={e.name} id={e.id} />
-            ))}
-          </ScrollView>
-        </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -133,9 +113,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   profilePic: {
-    backgroundColor: "#f27c22",
-    padding: 50,
-    borderRadius: 5,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    overflow: "hidden",
   },
   title: {
     fontSize: 32,
@@ -169,83 +150,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderBottomWidth: 2,
     borderBottomColor: "#555555",
-    color: "#dddddd",
+    color: "#ffffff",
     marginBottom: 25,
-  },
-  contactsContainer: {
-    height: 100,
   },
 });
 
 export default ProfileScreen;
-
-// import React from "react";
-// import { View, Text, Image, StyleSheet, TextInput } from "react-native";
-
-// const ProfileScreen = () => {
-//   return (
-//     <View style={styles.container}>
-//       <Image
-//         source={require("../assets/AppLogo.png")}
-//         style={styles.profileImage}
-//       />
-//       <Text style={styles.profileTitle}>Doctor's Profile</Text>
-//       <View style={styles.inputGroup}>
-//         <TextInput style={styles.input} placeholder="Age" />
-//         <TextInput style={styles.input} placeholder="Gender" />
-//       </View>
-//       <Text style={styles.label}>Blood Type</Text>
-//       <Text style={styles.value}>O</Text>
-//       <Text style={styles.label}>Weight</Text>
-//       <Text style={styles.value}>78</Text>
-//       <Text style={styles.label}>Height</Text>
-//       <Text style={styles.value}>182</Text>
-//       <Text style={styles.label}>Allergies</Text>
-//       <Text style={styles.value}>Shellfish,</Text>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     padding: 20,
-//   },
-//   profileImage: {
-//     width: 100, // Set the width as needed
-//     height: 100, // Set the height as needed
-//     alignSelf: "center",
-//     marginBottom: 20,
-//   },
-//   profileTitle: {
-//     fontSize: 24,
-//     fontWeight: "bold",
-//     textAlign: "center",
-//     marginBottom: 20,
-//   },
-//   inputGroup: {
-//     flexDirection: "row",
-//     justifyContent: "space-between",
-//     marginBottom: 20,
-//   },
-//   input: {
-//     borderBottomWidth: 1,
-//     borderColor: "black",
-//     padding: 10,
-//     flex: 1,
-//     marginRight: 10,
-//   },
-//   label: {
-//     fontSize: 16,
-//     color: "black",
-//     marginBottom: 5,
-//   },
-//   value: {
-//     fontSize: 16,
-//     color: "gray",
-//     marginBottom: 15,
-//   },
-// });
-
-// export default ProfileScreen;
