@@ -8,17 +8,29 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import {
-  Ionicons,
-  FontAwesome,
-  FontAwesome5,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons"; // Make sure to install expo vector icons package
 
-const BrainwavesGraphsScreen = () => {
+const BrainwavesGraphsScreen = (props) => {
   const [data, setData] = useState(null);
 
+  const patientName = props.route.params.patientName; // Extract patientName from route params
+
   useEffect(() => {
+    const sendPatientNameToServer = async (patientName) => {
+      try {
+        const response = await fetch("http://192.168.56.1:3000/patient", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ patientName }),
+        });
+
+        await response.text(); // Wait for the response
+        fetchData(); // Call fetchData after the patient name is sent
+      } catch (error) {
+        console.error("Error sending patient name:", error);
+      }
+    };
     const fetchData = async () => {
       try {
         const response = await fetch("http://192.168.56.1:3000/brainwavegraph");
@@ -37,7 +49,7 @@ const BrainwavesGraphsScreen = () => {
       }
     };
 
-    fetchData();
+    sendPatientNameToServer(patientName);
   }, []);
   return (
     <View style={styles.container}>

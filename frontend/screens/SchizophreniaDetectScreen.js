@@ -9,13 +9,36 @@ import {
   StyleSheet,
 } from "react-native";
 
-const SchizophreniaDetectScreen = () => {
+const SchizophreniaDetectScreen = (props) => {
   const [data, setData] = useState(null);
 
+  const patientName = props.route.params.patientName; // Extract patientName from route params
+
   useEffect(() => {
+    const sendPatientNameToServer = async (patientName) => {
+      try {
+        const response = await fetch("http://192.168.56.1:3000/patient", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ patientName }),
+        });
+
+        await response.text(); // Wait for the response
+        fetchData(); // Call fetchData after the patient name is sent
+      } catch (error) {
+        console.error("Error sending patient name:", error);
+      }
+    };
+
     const fetchData = async () => {
       try {
-        const response = await fetch("http://192.168.56.1:3000/members");
+        const response = await fetch(
+          `http://192.168.56.1:3000/members?patientName=${encodeURIComponent(
+            patientName
+          )}`
+        );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -27,7 +50,7 @@ const SchizophreniaDetectScreen = () => {
       }
     };
 
-    fetchData();
+    sendPatientNameToServer(patientName);
   }, []);
 
   return (

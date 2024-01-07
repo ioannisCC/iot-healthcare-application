@@ -13,18 +13,18 @@ def handle_patient():
     data = request.json
     patient_name = data['patientName']
     print(f"Received patient name: {patient_name}")
-
     # Call the function to download files from Firebase Storage
     download_patient_files(patient_name)
 
-    return f"Received and processed data for patient: {patient_name}"
+    return patient_name
 
 # Members API route
 
 
 @app.route("/members")
 def members():
-    probabilityOfSchizophrenia = predict()
+    patient_name = request.args.get('patientName')
+    probabilityOfSchizophrenia = predict(patient_name)
     print(type(probabilityOfSchizophrenia))
     return probabilityOfSchizophrenia
 
@@ -36,13 +36,14 @@ def brainwaveGraph():
     return brainwavegraphPNG
 
 
-def predict():
+def predict(patient_name):
     import mne
     import numpy as np
     import matplotlib.pyplot as plt
     from joblib import load
     import sys
     from scipy import stats
+    from mongoDB import pushData
 
     saved_model_path = '../model.joblib'
 
@@ -158,6 +159,8 @@ def predict():
     # After processing the file, delete it
     os.remove(edf_file_path)
     print(f"Deleted file: {edf_file_path}")
+
+    pushData(patient_name, probability_scores_str)
 
     return probability_scores_str
 

@@ -45,7 +45,7 @@ const HomeScreen = ({ navigation }) => {
     setSearchQuery(patient.name);
     setActivePatient(patient);
     setFilteredPatients([]);
-    sendPatientNameToServer(patient.id);
+    // sendPatientNameToServer(patient.id);
   };
 
   const renderPatientList = () => {
@@ -62,22 +62,22 @@ const HomeScreen = ({ navigation }) => {
     ));
   };
 
-  const sendPatientNameToServer = async (patientName) => {
-    try {
-      const response = await fetch("http://192.168.56.1:3000/patient", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ patientName }),
-      });
+  // const sendPatientNameToServer = async (patientName) => {
+  //   try {
+  //     const response = await fetch("http://192.168.56.1:3000/patient", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ patientName }),
+  //     });
 
-      const responseData = await response.text();
-      console.log(responseData);
-    } catch (error) {
-      console.error("Error sending patient name:", error);
-    }
-  };
+  //     const responseData = await response.text();
+  //     console.log(responseData);
+  //   } catch (error) {
+  //     console.error("Error sending patient name:", error);
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
@@ -107,7 +107,7 @@ const HomeScreen = ({ navigation }) => {
               style={styles.categoryButton}
               onPress={() =>
                 navigation.navigate("BrainwavesGraphs", {
-                  patientId: activePatient.id,
+                  patientName: activePatient.id,
                 })
               }
             >
@@ -148,7 +148,11 @@ const HomeScreen = ({ navigation }) => {
           {activePatient && (
             <TouchableOpacity
               style={styles.categoryButton2}
-              onPress={() => navigation.navigate("SchizophreniaDetect")}
+              onPress={() =>
+                navigation.navigate("SchizophreniaDetect", {
+                  patientName: activePatient.id,
+                })
+              }
             >
               <MaterialCommunityIcons
                 name="stethoscope"
