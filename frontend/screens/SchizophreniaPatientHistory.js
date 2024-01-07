@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, FlatList } from "react-native";
+import moment from "moment";
 
 function ListItem({ text, time, date }) {
   return (
@@ -17,21 +18,56 @@ function ListItem({ text, time, date }) {
   );
 }
 
-const SchizophreniaPatientHistoryScreen = () => {
-  const [data, setData] = useState([
-    {
-      id: "1",
-      text: "James has been detected with Schizophrenia.",
-      time: "22:13",
-      date: "18/03/2022",
-    },
-    {
-      id: "2",
-      text: "James has been detected with Schizophrenia.",
-      time: "09:45",
-      date: "19/03/2022",
-    },
-  ]);
+const SchizophreniaPatientHistoryScreen = (props) => {
+  const patientName = props.route.params.patientName;
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const sendPatientNameToServer = async (patientName) => {
+      try {
+        const response = await fetch(
+          "http://192.168.56.1:3000/schizophreniahistory",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ patientName }),
+          }
+        );
+
+        await response.text(); // Wait for the response
+        fetchData(); // Call fetchData after the patient name is sent
+      } catch (error) {
+        console.error("Error sending patient name:", error);
+      }
+    };
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `http://192.168.56.1:3000/schizophreniahistory?patientName=${encodeURIComponent(
+            patientName
+          )}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const jsonResponse = await response.json();
+        const formattedData = jsonResponse.map((item, index) => ({
+          id: item._id.$oid,
+          text: `Patient ${item.patient_name} has a probability score of ${item.probability_scores}%`,
+          time: moment(item.detection_date.$date).format("HH:mm:ss"),
+          date: moment(item.detection_date.$date).format("DD/MM/YYYY"),
+        }));
+        setData(formattedData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    sendPatientNameToServer(patientName);
+  }, []);
 
   return (
     <View style={styles.container}>

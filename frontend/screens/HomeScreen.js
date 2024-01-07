@@ -165,7 +165,11 @@ const HomeScreen = ({ navigation }) => {
           {activePatient && (
             <TouchableOpacity
               style={styles.categoryButton2}
-              onPress={() => navigation.navigate("SchizophreniaPatientHistory")}
+              onPress={() =>
+                navigation.navigate("SchizophreniaPatientHistory", {
+                  patientName: activePatient.id,
+                })
+              }
             >
               <FontAwesome name="history" size={24} color="white" />
               <Text style={styles.categoryButtonText2}>Patient History</Text>

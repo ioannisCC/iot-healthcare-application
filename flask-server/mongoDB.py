@@ -38,23 +38,28 @@ def pushData(patient_name, probability_scores_str):
         print("Did not push data for: " + patient_name + "!!!\n")
 
 
-def pullData(username):
+def pullData(patient_name):
     client, collection = connection()
     if not client:
         print("No valid MongoDB client, (pullData).")
-        return 0
+        return None
 
     try:
-        retrieved_document = collection.find_one({"username": username})
-        if retrieved_document:
-            print("Retrieved Document/Creator:")
-            print(retrieved_document)
-            return 1
+        retrieved_documents = collection.find({"patient_name": patient_name})
+        documents = [doc for doc in retrieved_documents]
+        if documents:
+            print(f"Retrieved Documents for {patient_name}:")
+            for doc in documents:
+                print(doc)
+            return documents
         else:
-            print(f"No document found for username: {username}")
-            return 0
+            print(f"No documents found for username: {patient_name}")
+            return None
     except Exception as e:
         print(f"An error occurred while fetching data: {e}")
-        return 0
+        return None
     finally:
         client.close()
+
+
+pullData("GeorgeSmith")

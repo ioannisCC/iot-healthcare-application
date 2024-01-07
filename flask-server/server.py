@@ -36,6 +36,21 @@ def brainwaveGraph():
     return brainwavegraphPNG
 
 
+@app.route("/schizophreniahistory")
+def schizophreniaHistory():
+    patient_name = request.args.get('patientName')
+    from mongoDB import pullData
+    from bson import json_util
+    import json
+
+    patient_documents = pullData(patient_name)
+
+    # Convert the documents to a JSON serializable format
+    patient_documents_json = json.loads(json_util.dumps(patient_documents))
+
+    return json.dumps(patient_documents_json)
+
+
 def predict(patient_name):
     import mne
     import numpy as np
