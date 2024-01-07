@@ -1,5 +1,7 @@
+from datetime import datetime
 import os
 import glob
+import shutil
 from flask import Flask, request, send_file
 from flask_cors import CORS
 from firebase import download_patient_files
@@ -76,13 +78,29 @@ def predict(patient_name):
     # new_file_path = '../s14.edf'
 
     downloads_dir = './downloads'
-    # Find the .edf file in the downloads directory
-    edf_file_path = next(glob.iglob(
-        os.path.join(downloads_dir, '*.edf')), None)
+    # # Find the .edf file in the downloads directory
+    # edf_file_path = next(glob.iglob(
+    #     os.path.join(downloads_dir, '*.edf')), None)
 
-    # Check if an EDF file was found
-    if edf_file_path is None:
-        raise FileNotFoundError("No EDF file found in downloads directory.")
+    edf_files = glob.glob(os.path.join(downloads_dir, '*.edf'))
+
+    # Process each file to extract the date and compare
+    latest_file = None
+    latest_date = None
+    for file in edf_files:
+        # Extract date from file name
+        date_str = os.path.basename(file).split('.')[0]
+        file_date = datetime.strptime(date_str, '%d_%m_%Y')
+
+        if latest_file is None or file_date > latest_date:
+            latest_file = file
+            latest_date = file_date
+
+    print(f"The latest EDF file is: {latest_file}")
+
+    # # Check if an EDF file was found
+    # if edf_file_path is None:
+    #     raise FileNotFoundError("No EDF file found in downloads directory.")
 
     # new_file_path = 'downloads/h05.edf'
 
@@ -97,7 +115,7 @@ def predict(patient_name):
         return array
 
     # read the new .edf file
-    new_data = read_new_data(edf_file_path)
+    new_data = read_new_data(latest_file)
 
     def mean(data):
         return np.mean(data, axis=-1)
@@ -172,8 +190,19 @@ def predict(patient_name):
     probability_scores_str = str(probability_scores_int)
 
     # After processing the file, delete it
-    os.remove(edf_file_path)
-    print(f"Deleted file: {edf_file_path}")
+    # os.remove(edf_file_path)
+    # print(f"Deleted file: {edf_file_path}")
+
+    for file in os.listdir(downloads_dir):
+        file_path = os.path.join(downloads_dir, file)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                # Use shutil.rmtree to delete directories
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print(f'Failed to delete {file_path}. Reason: {e}')
 
     pushData(patient_name, probability_scores_str)
 
