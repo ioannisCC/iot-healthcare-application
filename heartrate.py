@@ -43,16 +43,19 @@ x_vals = []
 y_vals = []
 
 # function to update the plot continuously
+
+
 def update_plot():
     start_time = time.time()
     while True:
         current_time = time.time() - start_time
-        new_data = data[data['Time'] <= current_time][-100:]  # show last 100 data points
-        
+        # show last 100 data points
+        new_data = data[data['Time'] <= current_time][-100:]
+
         # update data
         x_vals = new_data['Time']
         y_vals = new_data['HeartRate']
-        
+
         # update the plot
         plt.clf()
         plt.xlabel('Time (seconds)')
@@ -60,12 +63,11 @@ def update_plot():
         plt.title('Real-Time Heart Rate Monitoring')
         plt.grid(True)
         plt.plot(x_vals, y_vals, marker='o', linestyle='-')
-        plt.xlim(max(0, current_time - 10), current_time)  # show last 10 seconds
-        
-        plt.pause(0.1) # refresh rate
+        # show last 10 seconds
+        plt.xlim(max(0, current_time - 10), current_time)
+
+        plt.pause(0.1)  # refresh rate
+
 
 # call the function to update the plot
 update_plot()
-
-
-
