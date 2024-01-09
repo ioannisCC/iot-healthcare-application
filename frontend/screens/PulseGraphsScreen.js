@@ -3,62 +3,36 @@ import { View, Text } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 
 const PulseGraphsScreen = () => {
-  const rawData = `553757,93
-  553910,92
-  554380,88
-  554635,94
-  554832,90
-  555327,98
-  556163,61
-  556389,59
-  556399,57
-  556403,56
-  556408,56
-  556410,57
-   `;
+  // Updated timeData with floating point numbers
+  const timeData = [
+    553757.67512, 553910.68198, 554380.69215, 554635.70236, 554832.71458,
+    555327.72547, 556163.73582, 556389.74567, 556399.75528, 556403.76493,
+    556408.77489, 556410.7845,
+  ];
+  const pulseData = [93, 92, 88, 94, 90, 98, 61, 59, 57, 56, 56, 57];
 
-  // Parse the raw data string
-  const parsedData = rawData
-    .trim()
-    .split("\n")
-    .map((line) => {
-      const [time, heartRate] = line.trim().split(",");
-      return { Time: parseInt(time), HeartRate: parseInt(heartRate, 10) };
-    });
-
-  //Minimum time value
-  const minTime = Math.min(...parsedData.map((d) => d.Time));
-
-  //Normalize the time values, because numbers are too large
-  const normalizedData = parsedData.map((d) => ({
-    Time: d.Time - minTime, // Subtract minTime from each time value
-    HeartRate: d.HeartRate,
-  }));
-
+  const [dataIndex, setDataIndex] = useState(0);
   const [currentData, setCurrentData] = useState({
-    labels: [],
-    datasets: [{ data: [] }],
+    labels: timeData.slice(0, 5).map((t) => t.toFixed(2)), // Updated to format floating point numbers
+    datasets: [{ data: pulseData.slice(0, 5) }],
   });
-  const [startTime, setStartTime] = useState(Date.now());
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const currentTime = (Date.now() - startTime) / 1000; // Convert to seconds
-      const new_data = normalizedData
-        .filter((d) => d.Time <= currentTime)
-        .slice(-5); // Get last 100 data points
-
-      const labels = new_data.map((d) => d.Time.toFixed(2));
-      const heartRates = new_data.map((d) => d.HeartRate);
-
-      setCurrentData({
-        labels: labels,
-        datasets: [{ data: heartRates }],
+      setDataIndex((prevIndex) => {
+        const newIndex = (prevIndex + 1) % timeData.length;
+        setCurrentData({
+          labels: timeData
+            .slice(newIndex, newIndex + 5)
+            .map((t) => t.toFixed(2)), // Updated here as well
+          datasets: [{ data: pulseData.slice(newIndex, newIndex + 5) }],
+        });
+        return newIndex;
       });
-    }, 100); // Update every 0.1 seconds
+    }, 1000); // Update every second
 
     return () => clearInterval(interval); // Clear interval on component unmount
-  }, [startTime, normalizedData]); // Include normalizedData in the dependency array
+  }, []);
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
