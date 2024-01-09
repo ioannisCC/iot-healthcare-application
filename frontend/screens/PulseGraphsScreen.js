@@ -1,38 +1,62 @@
 import React, { useState, useEffect } from "react";
-import { View, Text } from "react-native";
+import { View, Text, ActivityIndicator } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 
 const PulseGraphsScreen = () => {
-  // Updated timeData with floating point numbers
-  const timeData = [
-    553757.67512, 553910.68198, 554380.69215, 554635.70236, 554832.71458,
-    555327.72547, 556163.73582, 556389.74567, 556399.75528, 556403.76493,
-    556408.77489, 556410.7845,
-  ];
-  const pulseData = [93, 92, 88, 94, 90, 98, 61, 59, 57, 56, 56, 57];
-
-  const [dataIndex, setDataIndex] = useState(0);
   const [currentData, setCurrentData] = useState({
-    labels: timeData.slice(0, 5).map((t) => t.toFixed(2)), // Updated to format floating point numbers
-    datasets: [{ data: pulseData.slice(0, 5) }],
+    labels: [],
+    datasets: [{ data: [] }],
   });
+  const [isLoading, setIsLoading] = useState(true);
+  const [dataIndex, setDataIndex] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setDataIndex((prevIndex) => {
-        const newIndex = (prevIndex + 1) % timeData.length;
-        setCurrentData({
-          labels: timeData
-            .slice(newIndex, newIndex + 5)
-            .map((t) => t.toFixed(2)), // Updated here as well
-          datasets: [{ data: pulseData.slice(newIndex, newIndex + 5) }],
-        });
-        return newIndex;
-      });
-    }, 1000); // Update every second
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch("http://192.168.56.1:3000/pulsegraph");
+        const json = await response.json();
 
-    return () => clearInterval(interval); // Clear interval on component unmount
+        setCurrentData({
+          labels: json.t_values.slice(0, 5).map((t) => t.toFixed(2)),
+          datasets: [{ data: json.hr_values.slice(0, 5) }],
+        });
+
+        setIsLoading(false);
+
+        // Start interval after data is fetched
+        const interval = setInterval(() => {
+          setDataIndex((prevIndex) => {
+            const newIndex = (prevIndex + 1) % json.t_values.length;
+            setCurrentData({
+              labels: json.t_values
+                .slice(newIndex, newIndex + 5)
+                .map((t) => t.toFixed(2)),
+              datasets: [
+                { data: json.hr_values.slice(newIndex, newIndex + 5) },
+              ],
+            });
+            return newIndex;
+          });
+        }, 1000); // Update every second
+
+        return () => clearInterval(interval); // Clear interval on component unmount
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>

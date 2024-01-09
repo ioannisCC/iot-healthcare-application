@@ -325,21 +325,20 @@ def heart_rate_values():
     heart_rate_values = []
 
     file_path = '../heart_rate/46343_heartrate.txt'
+    max_lines = 1000  # Number of lines to read
 
     with open(file_path, 'r') as file:
-        for line in file:
+        for i, line in enumerate(file):
+            if i >= max_lines:
+                break  # Stop reading after max_lines
+
             data = line.strip().split(',')  # data comma-separated
             # time to float and strip the '-'
             time_values.append(float(data[0].lstrip('-')))
             # heart rate to int if needed
             heart_rate_values.append(int(data[1]))
 
-    time_values.reverse()
-    heart_rate_values.reverse()
-    scale_factor = 10000
-    scaled_time_values = [t / scale_factor for t in time_values]
-
-    return time_values, scaled_time_values
+    return heart_rate_values, time_values
 
 
 if __name__ == "__main__":
