@@ -99,13 +99,6 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     paddingBottom: 10,
   },
-  // footer: {
-  //   flexDirection: "row",
-  //   justifyContent: "space-around",
-  //   paddingVertical: 10,
-  //   borderTopWidth: 1,
-  //   borderColor: "#ccc",
-  // },
   categoryButton: {
     flexDirection: "row",
     alignItems: "center",

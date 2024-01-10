@@ -15,6 +15,7 @@ def handle_patient():
     data = request.json
     patient_name = data['patientName']
     print(f"Received patient name: {patient_name}")
+    print("TESTTTTTTTTTT==============================")
     # Call the function to download files from Firebase Storage
     download_patient_files(patient_name)
 
@@ -82,20 +83,7 @@ def predict(patient_name):
     # load the trained model
     trained_model = load(saved_model_path)
 
-    # # Retrieve file name from POST data
-    # data = request.json
-    # file_name = data['fileName']
-    # # Path to the folder where the EDF files are stored
-    # edf_folder_path = '../'  # Update this path to the folder where your EDF files are stored
-    # # Full path to the EDF file
-    # new_file_path = os.path.join(edf_folder_path, file_name)
-
-    # new_file_path = '../s14.edf'
-
     downloads_dir = './downloads'
-    # # Find the .edf file in the downloads directory
-    # edf_file_path = next(glob.iglob(
-    #     os.path.join(downloads_dir, '*.edf')), None)
 
     edf_files = glob.glob(os.path.join(downloads_dir, '*.edf'))
 
@@ -112,12 +100,6 @@ def predict(patient_name):
             latest_date = file_date
 
     print(f"The latest EDF file is: {latest_file}")
-
-    # # Check if an EDF file was found
-    # if edf_file_path is None:
-    #     raise FileNotFoundError("No EDF file found in downloads directory.")
-
-    # new_file_path = 'downloads/h05.edf'
 
     def read_new_data(file_path):
         data = mne.io.read_raw_edf(file_path, preload=True)  # read the data
@@ -203,10 +185,6 @@ def predict(patient_name):
     probability_scores_int = round(probability_scores_int, 3)
 
     probability_scores_str = str(probability_scores_int)
-
-    # After processing the file, delete it
-    # os.remove(edf_file_path)
-    # print(f"Deleted file: {edf_file_path}")
 
     for file in os.listdir(downloads_dir):
         file_path = os.path.join(downloads_dir, file)
@@ -313,9 +291,14 @@ def brainwaves():
     plt.savefig(image_stream, format='png')
     image_stream.seek(0)
 
-    # After processing the file, delete it
-    os.remove(edf_file_path)
-    print(f"Deleted file: {edf_file_path}")
+    files_in_directory = os.listdir(downloads_dir)
+
+    # Loop through the files and delete each one
+    for file in files_in_directory:
+        file_path = os.path.join(downloads_dir, file)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+            print(f"Deleted file: {file_path}")
 
     return send_file(image_stream, mimetype='image/png')
 
@@ -324,10 +307,19 @@ def heart_rate_values():
     time_values = []
     heart_rate_values = []
 
-    file_path = '../heart_rate/46343_heartrate.txt'
+    downloads_dir = './downloads'
+    # Find the .txt file in the downloads directory
+    pulse_file_path = next(glob.iglob(
+        os.path.join(downloads_dir, '*.txt')), None)
+
+    # Check if an pulse file was found
+    if pulse_file_path is None:
+        raise FileNotFoundError("No pulse file found in downloads directory.")
+
+    # file_path = '../heart_rate/46343_heartrate.txt'
     max_lines = 1000  # Number of lines to read
 
-    with open(file_path, 'r') as file:
+    with open(pulse_file_path, 'r') as file:
         for i, line in enumerate(file):
             if i >= max_lines:
                 break  # Stop reading after max_lines
@@ -336,7 +328,15 @@ def heart_rate_values():
             # time to float and strip the '-'
             time_values.append(float(data[0].lstrip('-')))
             # heart rate to int if needed
-            heart_rate_values.append(int(data[1]))
+            heart_rate_values.append(float(data[1]))
+
+    files_in_directory = os.listdir(downloads_dir)
+    # Loop through the files and delete each one
+    for file in files_in_directory:
+        file_path = os.path.join(downloads_dir, file)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+            print(f"Deleted file: {file_path}")
 
     return heart_rate_values, time_values
 

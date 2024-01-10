@@ -121,7 +121,7 @@ const HomeScreen = ({ navigation }) => {
               style={styles.categoryButton}
               onPress={() =>
                 navigation.navigate("PulseGraphs", {
-                  patientId: activePatient.id,
+                  patientName: activePatient.id,
                 })
               }
             >

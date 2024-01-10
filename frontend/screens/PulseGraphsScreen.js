@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 
-const PulseGraphsScreen = () => {
+const PulseGraphsScreen = (props) => {
+  const patientName = props.route.params.patientName; // Extract patientName from route param
   const [currentData, setCurrentData] = useState({
     labels: [],
     datasets: [{ data: [] }],
@@ -11,10 +12,30 @@ const PulseGraphsScreen = () => {
   const [dataIndex, setDataIndex] = useState(0);
 
   useEffect(() => {
+    const sendPatientNameToServer = async (patientName) => {
+      try {
+        const response = await fetch("http://192.168.56.1:3000/patient", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ patientName }),
+        });
+
+        await response.text(); // Wait for the response
+        fetchData(); // Call fetchData after the patient name is sent
+      } catch (error) {
+        console.error("Error sending patient name:", error);
+      }
+    };
+
     const fetchData = async () => {
       setIsLoading(true);
       try {
         const response = await fetch("http://192.168.56.1:3000/pulsegraph");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const json = await response.json();
 
         setCurrentData({
@@ -47,7 +68,7 @@ const PulseGraphsScreen = () => {
       }
     };
 
-    fetchData();
+    sendPatientNameToServer(patientName);
   }, []);
 
   if (isLoading) {
