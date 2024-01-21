@@ -36,62 +36,65 @@ new_data = read_new_data(new_file_path)
 on = 1
 
 
+# axis=-1 refers to the last axis in the array
+
+# mean
 def mean(data):
-    return np.mean(data, axis=-1)
+    return np.mean(data,axis=-1)
 
-
+# standard deviation
 def std(data):
-    return np.std(data, axis=-1)
+    return np.std(data,axis=-1)
 
-
+# peak-to-peak (PTP) / the range of values (maximum - minimum)
 def ptp(data):
-    return np.ptp(data, axis=-1)
+    return np.ptp(data,axis=-1)
 
-
+# variance
 def var(data):
-    return np.var(data, axis=-1)
+        return np.var(data,axis=-1)
 
-
+# minimum value
 def minim(data):
-    return np.min(data, axis=-1)
+      return np.min(data,axis=-1)
 
-
+# maximum value
 def maxim(data):
-    return np.max(data, axis=-1)
+      return np.max(data,axis=-1)
 
-
+# index of the minimum value
 def argminim(data):
-    return np.argmin(data, axis=-1)
+      return np.argmin(data,axis=-1)
 
-
+# index of the maximum value
 def argmaxim(data):
-    return np.argmax(data, axis=-1)
+      return np.argmax(data,axis=-1)
 
-
+# mean of the squared values
 def mean_square(data):
-    return np.mean(data**2, axis=-1)
+      return np.mean(data**2,axis=-1)
 
+# root mean square 
+def rms(data): #root mean square
+      return  np.sqrt(np.mean(data**2,axis=-1))  
 
-def rms(data):  # root mean square
-    return np.sqrt(np.mean(data**2, axis=-1))
-
-
+# sum of absolute differences between consecutive elements
 def abs_diffs_signal(data):
-    return np.sum(np.abs(np.diff(data, axis=-1)), axis=-1)
+    return np.sum(np.abs(np.diff(data,axis=-1)),axis=-1)
 
-
+#skewness (a measure of the asymmetry of the probability distribution)
 def skewness(data):
-    return stats.skew(data, axis=-1)
+    return stats.skew(data,axis=-1)
 
-
+# kurtosis (a measure of the "tailedness" or shape of the probability distribution)
 def kurtosis(data):
-    return stats.kurtosis(data, axis=-1)
+    return stats.kurtosis(data,axis=-1)
 
-
+# all previous results in a single array
 def concatenate_features(data):
-    return np.concatenate((mean(data), std(data), ptp(data), var(data), minim(data), maxim(data), argminim(data), argmaxim(data),
-                          mean_square(data), rms(data), abs_diffs_signal(data),
-                          skewness(data), kurtosis(data)), axis=-1)
+    return np.concatenate((mean(data),std(data),ptp(data),var(data),minim(data),maxim(data),argminim(data),argmaxim(data),
+                          mean_square(data),rms(data),abs_diffs_signal(data),
+                          skewness(data),kurtosis(data)),axis=-1)
 
 
 # extract features from the new data
@@ -112,6 +115,6 @@ if predictions[0] == 0:
 else:
     print("The patient is classified as having schizophrenia.")
 
-# optional: Print probability scores for each class
+# print probability scores for each class
 print("Probability of being healthy:", probability_scores[0][0])
 print("Probability of having schizophrenia:", probability_scores[0][1])

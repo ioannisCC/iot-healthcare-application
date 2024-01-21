@@ -106,9 +106,9 @@ features_array = np.array(features)
 features_array.shape
 
 clf = LogisticRegression()
-gkf = GroupKFold(5)
-pipe = Pipeline([('scaler',StandardScaler()),('clf',clf)])
-param_grid = {'clf__C':[0.1,0.5,0.7,1,3,5,7]}
+gkf = GroupKFold(5) # the dataset is divided into K subsets (folds) of approximately equal size
+pipe = Pipeline([('scaler',StandardScaler()),('clf',clf)]) # pipeline allows sequential execution of data processing steps before fitting the model 
+param_grid = {'clf__C':[0.1,0.5,0.7,1,3,5,7]} # hyperparameters to search for the best regularization (penalty) to avoid overfitting 
 gscv = GridSearchCV(pipe, param_grid, cv=gkf, n_jobs=12)
 gscv.fit(features_array, label_array, groups=group_array)
 
