@@ -7,7 +7,7 @@ def connection(retry_count=3):
     while retry_count > 0:
         try:
             client = MongoClient(
-                "mongodb+srv://iot:tLn7YmTz32WgyOAA@healthcareapp.nyr6sdb.mongodb.net/?retryWrites=true&w=majority",
+                "mongodb+srv://<username>:<password>@healthcareapp.nyr6sdb.mongodb.net/?retryWrites=true&w=majority",
                 connectTimeoutMS=30000,   # 30 seconds
                 socketTimeoutMS=45000
             )
