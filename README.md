@@ -1,4 +1,3 @@
-# iot-healthcare-application
 
 **Abstract**
 
